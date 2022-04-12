@@ -15,7 +15,6 @@ import { UserProvider } from './context/UserContext';
 import authInitializer from './apis/axios';
 import authApi from './apis/auth';
 import FullPageLoader from './components/FullPageLoader';
-import ErrorBoundary from './components/ErrorBoundary';
 
 import LOCAL_STORAGE_KEY from './utils/constants';
 
