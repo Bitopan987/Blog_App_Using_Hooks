@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
 import Loader from './Loader';
-import { ARTICLES_URL, PROFILE_URL } from '../apis/urls';
-import LOCAL_STORAGE_KEY from '../utils/constants';
 import Articles from './Articles';
 import Pagination from './Pagination';
 import { Link, useParams } from 'react-router-dom';
