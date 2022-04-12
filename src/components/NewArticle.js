@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router';
 import articlesApi from '../apis/articles';
 import { validations } from '../utils/validations';
 
@@ -17,60 +18,35 @@ function NewArticle() {
     body: '',
   });
 
-  const handleChange = ({ target }) => {
+  const navigate = useNavigate();
+  const handleErrors = ({ target }) => {
     let { name, value } = target;
-    if (name === 'title') {
-      validations(errors, name, value);
-      setTitle(value);
-      {
-        setErrors({ ...errors, title: errors });
-      }
-    } else if (name === 'description') {
-      validations(errors, name, value);
-      setDescription(value);
-      {
-        setErrors({ ...errors, description: errors });
-      }
-    } else if (name === 'tags') {
-      validations(errors, name, value);
-      setTags(value);
-      {
-        setErrors({ ...errors, tags: errors });
-      }
-    } else if (name === 'body') {
-      validations(errors, name, value);
-      setBody(value);
-      {
-        setErrors({ ...errors, body: errors });
-      }
-    }
+    let errorsClone = { ...errors };
+    validations(errorsClone, name, value);
+    setErrors(errorsClone);
   };
 
   const handleSubmit = async (event) => {
-    tags = tags.split(',').map((tag) => tag.trim());
+    const tagList = tags.split(',').map((tag) => tag.trim());
     event.preventDefault();
-    if (title && description && tags && body) {
+    if (title && description && tagList.length && body) {
       try {
         const payload = {
-          article: { title, description, tagList: tags, body },
+          article: { title, description, tags, body },
         };
         const { data } = await articlesApi.create(payload);
         console.log(data);
-        setTitle('');
-        setDescription('');
-        setTags('');
-        setBody('');
-        setErrors('');
+        navigate(`/articles/${data.article.slug}`);
       } catch (error) {
-        setErrors({ ...errors, email: 'Enter all fields' });
+        setErrors('Enter all fields');
       }
     }
   };
 
   return (
-    <section>
+    <section className="pt-40">
       <form
-        className="bg-gray-100 p-8 text-center rounded-md w-2/4 mt-20 mx-auto "
+        className="bg-gray-100 p-8 text-center rounded-md w-2/4  mx-auto "
         onSubmit={handleSubmit}
       >
         <input
@@ -79,7 +55,10 @@ function NewArticle() {
           placeholder="Enter Title"
           value={title}
           name="title"
-          onChange={(e) => handleChange(e)}
+          onChange={(e) => {
+            setTitle(e.target.value);
+            handleErrors(e);
+          }}
         ></input>
         <input
           className="block w-full my-3 py-2 px-3 border border-gray-400 rounded-md"
@@ -87,7 +66,10 @@ function NewArticle() {
           placeholder="Enter Description"
           value={description}
           name="description"
-          onChange={(e) => handleChange(e)}
+          onChange={(e) => {
+            setDescription(e.target.value);
+            handleErrors(e);
+          }}
         ></input>
         <input
           className="block w-full my-3 py-2 px-3 border border-gray-400 rounded-md"
@@ -95,7 +77,10 @@ function NewArticle() {
           placeholder="Enter Tags"
           value={tags}
           name="tags"
-          onChange={(e) => handleChange(e)}
+          onChange={(e) => {
+            setTags(e.target.value);
+            handleErrors(e);
+          }}
         ></input>
         {/* <MdEditor
           style={{ height: '500px' }}
@@ -110,7 +95,10 @@ function NewArticle() {
           value={body}
           cols="40"
           rows="5"
-          onChange={(e) => handleChange(e)}
+          onChange={(e) => {
+            setBody(e.target.value);
+            handleErrors(e);
+          }}
         ></textarea>
         <input
           type="submit"
