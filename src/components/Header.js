@@ -6,7 +6,7 @@ function Header({ handleLogout }) {
   const userData = useContext(UserContext);
   const { isLoggedIn } = userData;
   return (
-    <header className="flex  w-full justify-between sm:flex-col bg-gray-100 px-20 py-3 shadow-md rounded-md md:flex-row">
+    <header className="flex fixed w-full justify-between sm:flex-col bg-gray-100 px-20 py-3 shadow-md rounded-md md:flex-row">
       <NavLink to="/">
         <h2 className="text-2xl font-extrabold text-gray-600 font-logo">
           Alt Blog
@@ -39,8 +39,7 @@ function AuthHeader(props) {
       >
         <span className="flex items-center text-xl mx-3">
           <img
-            src={user.image || 'profile.png'}
-            alt={user.username}
+            src={user.image || '/image/smiley.jpg'}
             className="w-7 h-7 rounded-full"
           />
           <span className="ml-2 text-gray-400 font-medium">

@@ -45,7 +45,7 @@ function Articles(props) {
                 className="flex items-center my-2"
               >
                 <img
-                  src={article.author.image || '/smiley.jpg'}
+                  src={article.author.image || '/image/smiley.jpg'}
                   alt={article.author.username}
                   className="w-14 h-14 rounded-full object-cover"
                 />

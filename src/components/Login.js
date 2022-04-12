@@ -12,24 +12,11 @@ function Login() {
   const [errors, setErrors] = useState({ email: '', password: '' });
   const info = useContext(UserContext);
 
-  const handleChange = ({ target }) => {
+  const handleErrors = ({ target }) => {
     let { name, value } = target;
-    let errors = { errors };
-    if (name === 'email') {
-      validations(errors, name, value);
-      if (!errors) {
-        setErrors({ ...errors, email: errors });
-      } else {
-        setEmail(value);
-      }
-    } else if (name === 'password') {
-      validations(errors, name, value);
-      if (!errors) {
-        setErrors({ ...errors, password: errors });
-      } else {
-        setPassword(value);
-      }
-    }
+    let errorsClone = { ...errors };
+    validations(errorsClone, name, value);
+    setErrors(errorsClone);
   };
 
   const handleSubmit = async (event) => {
@@ -71,7 +58,10 @@ function Login() {
               placeholder="Enter Email"
               value={email}
               name="email"
-              onChange={(e) => handleChange(e)}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                handleErrors(e);
+              }}
             />
             <span className="text-red-500">{errors.email}</span>
 
@@ -81,7 +71,10 @@ function Login() {
               placeholder="Enter Password"
               value={password}
               name="password"
-              onChange={(e) => handleChange(e)}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                handleErrors(e);
+              }}
             />
             <span className="text-red-500">{errors.password}</span>
 
