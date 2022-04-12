@@ -4,6 +4,7 @@ import Tags from './Tags';
 import Pagination from './Pagination';
 import UserContext from '../context/UserContext';
 import articlesApi from '../apis/articles';
+import FeedNav from './FeedNav';
 
 function ArticlesList() {
   const [articles, setArticles] = useState(null);
@@ -18,7 +19,7 @@ function ArticlesList() {
 
   const getArticles = async () => {
     const query =
-      `/?offset=${(activePageIndex - 1) * 10}&limit=${articlesPerPage}` +
+      `?offset=${(activePageIndex - 1) * 10}&limit=${articlesPerPage}` +
       (tagSelected && `&tag=${tagSelected}`);
     try {
       const finalApi =
@@ -60,48 +61,15 @@ function ArticlesList() {
   };
 
   return (
-    <main className="px-24 py-16 w-full">
-      <div className="flex mb-3">
-        <span
-          className={
-            selectedFeed === 'global'
-              ? 'cursor-pointer mr-8 text-xl text-green-500'
-              : 'cursor-pointer mr-8 text-xl text-gray-600'
-          }
-          onClick={() => {
-            setTagSelected('');
-            setSelectedFeed('global');
-          }}
-        >
-          <i className="fas fa-newspaper mr-2"></i>
-          Global Feed
-        </span>
-        {isLoggedIn && (
-          <span
-            className={
-              selectedFeed === 'personal'
-                ? 'text-xl mr-8 cursor-pointer text-green-500'
-                : 'text-xl  cursor-pointer text-gray-600'
-            }
-            onClick={() => {
-              setTagSelected('');
-              setSelectedFeed('personal');
-              setActivePageIndex(1);
-            }}
-          >
-            {' '}
-            <i className="fas fa-newspaper mr-2"></i>
-            My feed
-          </span>
-        )}
-
-        {tagSelected && (
-          <div className="text-xl">
-            <span className="mx-2 text-gray-500">/</span>
-            <span className="text-green-700">#{tagSelected}</span>
-          </div>
-        )}
-      </div>
+    <main className="px-24 py-16  pt-28 w-full">
+      <FeedNav
+        isLoggedIn={isLoggedIn}
+        selectedFeed={selectedFeed}
+        tagSelected={tagSelected}
+        setActivePageIndex={setActivePageIndex}
+        setTagSelected={setTagSelected}
+        setSelectedFeed={setSelectedFeed}
+      />
 
       <section className="flex justify-between ">
         <div className="w-4/6">
