@@ -1,4 +1,4 @@
-import '../stylesheets/loader.css';
+import '../stylesheets/fullPageLoader.css';
 
 function FullPageLoader() {
   return (
