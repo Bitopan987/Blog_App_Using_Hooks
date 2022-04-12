@@ -1,85 +1,69 @@
 import React, { useState, useContext, useEffect } from 'react';
 import Loader from './Loader';
-import { Link, useParams } from 'react-router-dom';
-import { ARTICLES_URL } from '../apis/urls';
-import LOCAL_STORAGE_KEY from '../utils/constants';
-import Comments from './Comments';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 // import ReactMarkdown from 'react-markdown';
 // import remarkGfm from 'remark-gfm';
 import UserContext from '../context/UserContext';
+import articlesApi from '../apis/articles';
+import NewComment from './NewComment';
 
-function Article(props) {
+function Article() {
   const { slug } = useParams();
-  console.log(slug);
   const [article, setArticle] = useState(null);
   const [error, setError] = useState('');
   const userData = useContext(UserContext);
   const { isLoggedIn, user } = userData;
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    function getArticle() {
-      fetch(ARTICLES_URL + `/${slug}`)
-        .then((res) => {
-          if (!res.ok) {
-            throw new Error(res.statusText);
-          }
-          return res.json();
-        })
-        .then((data) => {
-          setArticle(data.article);
-        })
-        .catch((err) => {
-          setError('Not able to fetch Articles');
-        });
+  const getArticle = async () => {
+    try {
+      const { data } = await articlesApi.article(slug);
+      setArticle(data.article);
+    } catch (error) {
+      setError('Not able to fetch Articles');
     }
+  };
+  useEffect(() => {
     getArticle();
   }, [slug]);
 
-  function getDate(date) {
+  const getDate = (date) => {
     let newDate = new Date(date).toISOString().split('T')[0];
     return newDate;
-  }
-  function handleEdit(slug) {
-    props.history.push({
-      pathname: `/articles/edit/${slug}`,
-      article: article,
-    });
-  }
+  };
 
-  function handleDelete() {
-    fetch(ARTICLES_URL + '/' + slug, {
-      method: 'DELETE',
-      headers: {
-        Authorization: 'Bearer ' + localStorage[LOCAL_STORAGE_KEY],
-      },
-    })
-      .then((res) => {
-        if (!res.ok) {
-          return res.json().then(({ errors }) => {
-            return Promise.reject(errors);
-          });
-        }
-        props.history.push(`/profiles/${user.username}`);
-      })
-      .catch((err) => console.log(err));
-  }
+  const handleEdit = (slug) => {
+    navigate(`/articles/edit/${slug}`);
+  };
+
+  const handleDelete = async () => {
+    try {
+      const { data } = await articlesApi.destroy(slug);
+
+      navigate(`/profiles/${user.username}`);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   if (error) {
-    return <h2 className="text-red-500 text-center text-xl mt-8">{error}</h2>;
+    return <h3 className="text-red-500 text-center text-xl mt-8">{error}</h3>;
   }
   if (!article) {
-    return <Loader />;
+    return (
+      <div className="pt-16">
+        <Loader />
+      </div>
+    );
   }
-  let { tagList } = article;
 
   return (
-    <main>
-      {/* hero section */}
-      <section className="px-20 bg-gray-400 py-12 md:flex items-center rounded-md shadow-md">
+    <>
+      <section className="px-20 pt-36 bg-gray-50 py-8 md:flex items-center ">
         <div className="flex py-6 items-center flex-col mr-20">
           <Link to={`/profiles/${article.author.username}`}>
             <img
-              src={article.author.image || 'smiley.png'}
+              src={article.author.image || '/image/smiley.jpg'}
               alt={article.author.username}
               className="w-16 h-16 object-cover rounded-full"
             />
@@ -87,20 +71,23 @@ function Article(props) {
           <span className="mx-3 text-gray-700 font-bold text-xl">
             {article.author.username}
           </span>
-          <span className="mx-3 text-gray-700">
+          <span className="mx-3 text-xs text-gray-700">
             {getDate(article.createdAt)}
           </span>
         </div>
-        <div className="flex flex-col w-5/6">
-          <h2 className="mt-2 mb-5 text-4xl self-center text-gray-900">
+        <div className="flex flex-col ml-20 w-5/6">
+          <h2 className="mt-2 self-start mb-5 text-4xl  text-gray-900">
             {article.title}
           </h2>
-          <p className="self-start text-gray-800 mb-5 overflow-hidden w-full">
+          <p className="self-start text-gray-500 mb-5 text-sm overflow-hidden w-full">
             {article.description}
+          </p>
+          <p className="self-start text-gray-800 mb-5 overflow-hidden w-full">
+            {article.body}
           </p>
           <div className="flex justify-between">
             <div className="flex flex-wrap items-center">
-              {tagList.map((tag) => {
+              {article.tagList.map((tag) => {
                 if (!tag) {
                   return null;
                 } else {
@@ -115,21 +102,18 @@ function Article(props) {
                 }
               })}
             </div>
+
             {isLoggedIn && user.username === article.author.username && (
               <div className="flex flex-wrap items-center">
                 <span
-                  className={
-                    'btn bg-gray-300 text-gray-600 rounded-md mx-3 mb-3 cursor-pointer'
-                  }
+                  className={'btn-gray  mx-3 mb-3 cursor-pointer'}
                   onClick={() => handleEdit(article.slug)}
                 >
                   <i className="far fa-edit mr-2"></i> Edit
                 </span>
 
                 <span
-                  className={
-                    'btn bg-gray-300 text-gray-600 rounded-md mx-3 mb-3 cursor-pointer'
-                  }
+                  className={'btn-gray  mx-3 mb-3 cursor-pointer'}
                   onClick={handleDelete}
                 >
                   <i className="far fa-trash-alt mr-2"></i>Delete
@@ -140,13 +124,10 @@ function Article(props) {
         </div>
       </section>
 
-      {/* article body */}
-      <section className="bg-gray-100">
-        <div className="text-lg text-gray-700 px-20 py-12 border w-full overflow-hidden">
-          {/* <ReactMarkdown children={article.body} remarkPlugins={[remarkGfm]} /> */}
-        </div>
-        <div className="px-20 py-12">
-          <Comments slug={article.slug} />
+      <section className="">
+        <div className="text-lg text-gray-700 px-20 py-4 w-full overflow-hidden"></div>
+        <div className="px-20 ">
+          <NewComment slug={article.slug} />
           {!user && (
             <div className="flex justify-center mt-10 mb-5">
               <h3 className="text-xl text-gray-600">
@@ -160,7 +141,7 @@ function Article(props) {
           )}
         </div>
       </section>
-    </main>
+    </>
   );
 }
 
