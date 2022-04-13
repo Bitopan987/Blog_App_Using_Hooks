@@ -78,7 +78,7 @@ function Profile(props) {
     const finalApi =
       id === 'false' ? profileApi.addFavourite : profileApi.removeFavourite;
     try {
-      const { data } = await finalApi(slug);
+      await finalApi(slug);
       setFavoriteCount(favoriteCount + 1);
     } catch (error) {
       console.log(error);
@@ -143,8 +143,6 @@ function Profile(props) {
               onClick={() => {
                 setFeedSelected('author');
                 setActivePageIndex(1);
-                // state
-                // getFeedArticles();
               }}
             >
               <i className="fas fa-newspaper mr-2"></i>
@@ -160,7 +158,6 @@ function Profile(props) {
               onClick={() => {
                 setFeedSelected('favorited');
                 setActivePageIndex(1);
-                // getFeedArticles();
               }}
             >
               <i className="ri-article-line mr-1 text-base"></i>
@@ -183,6 +180,7 @@ function Profile(props) {
             activePageIndex={activePageIndex}
             handleClick={handleClick}
             updateCurrentPageIndex={updateCurrentPageIndex}
+            setArticlesPerPage={setArticlesPerPage}
           />
         </div>
       </section>

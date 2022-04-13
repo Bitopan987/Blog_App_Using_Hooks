@@ -38,8 +38,7 @@ function Article() {
 
   const handleDelete = async () => {
     try {
-      const { data } = await articlesApi.destroy(slug);
-
+      await articlesApi.destroy(slug);
       navigate(`/profiles/${user.username}`);
     } catch (error) {
       console.log(error);

@@ -24,7 +24,7 @@ function NewComment(props) {
     if (inputText) {
       try {
         const payload = { comment: { body: inputText } };
-        const { data } = await commentsApi.create(slug, payload);
+        await commentsApi.create(slug, payload);
         setInputText('');
         setComments('');
         getComments(slug);
@@ -38,7 +38,7 @@ function NewComment(props) {
     let { id } = target.dataset;
     let slug = props.slug;
     try {
-      const { data } = await commentsApi.destroy(slug, id);
+      await commentsApi.destroy(slug, id);
       setComments('');
       getComments(slug);
     } catch (error) {

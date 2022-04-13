@@ -40,6 +40,7 @@ function AuthHeader(props) {
           <img
             src={user.image || '/image/smiley.jpg'}
             className="w-7 h-7 rounded-full"
+            alt="smiley.jpg"
           />
           <span className="ml-2 text-gray-400 font-medium">
             {user.username}

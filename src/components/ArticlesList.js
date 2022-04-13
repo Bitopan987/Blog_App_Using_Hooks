@@ -23,7 +23,7 @@ function ArticlesList() {
       (tagSelected && `&tag=${tagSelected}`);
     try {
       const finalApi =
-        selectedFeed == 'global' ? articlesApi.articles : articlesApi.feed;
+        selectedFeed === 'global' ? articlesApi.articles : articlesApi.feed;
       const { data } = await finalApi(query);
       setArticles(data.articles);
       setArticlesCount(data.articlesCount);
