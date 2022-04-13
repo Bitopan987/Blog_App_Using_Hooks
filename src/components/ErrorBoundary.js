@@ -11,7 +11,7 @@ class ErrorBoundary extends React.Component {
 
   handleClick = () => {
     this.setState({ hasError: false });
-    this.props.history.push('/');
+    window.location.href = '/';
   };
 
   render() {
