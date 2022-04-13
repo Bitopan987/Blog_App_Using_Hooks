@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import Home from './components/Home';
 import ArticlesList from './components/ArticlesList';
 import Header from './components/Header';
@@ -15,13 +15,14 @@ import { UserProvider } from './context/UserContext';
 import authInitializer from './apis/axios';
 import authApi from './apis/auth';
 import FullPageLoader from './components/FullPageLoader';
-
 import LOCAL_STORAGE_KEY from './utils/constants';
+import ErrorBoundary from './components/ErrorBoundary';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   const fetchUser = async () => {
     try {
@@ -36,10 +37,10 @@ function App() {
   };
 
   const handleLogout = () => {
-    setIsLoggedIn(true);
+    setIsLoggedIn(false);
     setUser(null);
     localStorage.setItem(LOCAL_STORAGE_KEY, null);
-    window.location.href = '/';
+    navigate(`/`);
   };
 
   useEffect(() => {
@@ -55,10 +56,14 @@ function App() {
         value={{
           isLoggedIn: isLoggedIn,
           user: user,
+          setUser: setUser,
+          setIsLoggedIn: setIsLoggedIn,
         }}
       >
-        <Header handleLogout={handleLogout} />
-        {isLoggedIn ? <AuthenticatedApp /> : <UnAuthenticatedApp />}
+        <ErrorBoundary>
+          <Header handleLogout={handleLogout} />
+          {isLoggedIn ? <AuthenticatedApp /> : <UnAuthenticatedApp />}
+        </ErrorBoundary>
       </UserProvider>
     );
   }

@@ -34,8 +34,7 @@ function AuthHeader(props) {
           user: props.user,
           pathname: `/profiles/${user.username}`,
         }}
-        className="btn mr-5 mt:5 md:mt-0 "
-        activeClassName="btn-active"
+        className="btn mr-5 mt:5 md:mt-0"
       >
         <span className="flex items-center text-xl mx-3">
           <img
@@ -49,15 +48,17 @@ function AuthHeader(props) {
       </NavLink>
       <NavLink
         to="/articles"
-        className="btn  mr-5 mt-5 md:mt-0"
-        activeClassName="btn-active"
+        className={({ isActive }) =>
+          `btn mr-5 mt:5 md:mt-0 ${isActive ? 'btn-active' : undefined}`
+        }
       >
         Home
       </NavLink>
       <NavLink
         to="/new-article"
-        activeClassName="btn-active"
-        className="btn mr-5 mt-5 md:mt-0"
+        className={({ isActive }) =>
+          `btn mr-5 mt-5 md:mt-0 ${isActive ? 'btn-active' : undefined}`
+        }
       >
         New Article
       </NavLink>
@@ -70,13 +71,29 @@ function AuthHeader(props) {
 function NonAuthHeader(props) {
   return (
     <nav className="flex">
-      <NavLink to="/articles" activeClassName="btn-active" className="btn ">
+      <NavLink
+        to="/articles"
+        className={({ isActive }) =>
+          `btn ${isActive ? 'btn-active' : undefined}`
+        }
+      >
         Home
       </NavLink>
-      <NavLink to="/register" activeClassName="btn-active" className="btn ">
+      <NavLink
+        to="/register"
+        className={({ isActive }) =>
+          `btn ${isActive ? 'btn-active' : undefined}`
+        }
+      >
         Sign-Up
       </NavLink>
-      <NavLink to="/login" activeClassName="btn-active" className="btn">
+
+      <NavLink
+        to="/login"
+        className={({ isActive }) =>
+          `btn ${isActive ? 'btn-active' : undefined}`
+        }
+      >
         Log-In
       </NavLink>
     </nav>

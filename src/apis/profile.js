@@ -3,13 +3,12 @@ import axios from 'axios';
 
 const profile = (id) => axios.get(`${PROFILE_URL}${id}`);
 const articles = (query) => axios.get(`${ARTICLES_URL}${query}`);
-const follow = (username) => axios.post(`${PROFILE_URL}/${username}/follow`);
-const unfollow = (username) =>
-  axios.delete(`${PROFILE_URL}/${username}/follow`);
+const follow = (username) => axios.post(`${PROFILE_URL}${username}/follow`);
+const unfollow = (username) => axios.delete(`${PROFILE_URL}${username}/follow`);
 const addFavourite = (slug) => axios.post(`${ARTICLES_URL}/${slug}/favorite`);
 const removeFavourite = (slug) =>
   axios.delete(`${ARTICLES_URL}/${slug}/favorite`);
-const update = () => axios.put(USER_VERIFY_URL);
+const update = (payload) => axios.put(`${USER_VERIFY_URL}`, payload);
 
 const profileApi = {
   profile: profile,

@@ -12,7 +12,7 @@ function Comments(props) {
   let { comments } = props;
 
   const { isLoggedIn } = userData;
-  let loggedInUser = userData.user.username;
+  let loggedInUser = userData?.user?.username;
   if (!comments) {
     return <Loader />;
   }
