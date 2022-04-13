@@ -3,6 +3,8 @@ import { useParams } from 'react-router-dom';
 import { validations } from '../utils/validations';
 import { useNavigate } from 'react-router';
 
+import MDEditor from '@uiw/react-md-editor';
+
 import Loader from './Loader';
 import articlesApi from '../apis/articles';
 
@@ -52,14 +54,15 @@ function UpdateArticle() {
     if (title && description && tagList && body) {
       try {
         const payload = {
-          article: { title, description, tags: tagList, body },
+          article: { title, description, tagList, body },
         };
         const { data } = await articlesApi.update(slug, payload);
         console.log(data);
         setArticle(data.article);
         navigate(`/articles/${slug}`);
       } catch (errors) {
-        setErrors({ errors: 'Enter all fields' });
+        console.dir(errors);
+        setErrors({ base: 'Enter all fields' });
       }
     }
   };
@@ -82,7 +85,7 @@ function UpdateArticle() {
           Edit Article
         </legend>
         <fieldset className="flex flex-col">
-          {/* <span className="text-red-500 my-1">{errors}</span> */}
+          <span className="text-red-500 my-1">{errors.base}</span>
           <input
             type="text"
             value={title}
@@ -105,17 +108,6 @@ function UpdateArticle() {
             }}
             className="my-2 p-2 rounded-md outline-none border-2 border-gray-300 focus:border-blue-500"
           />
-          <textarea
-            rows="4"
-            value={body}
-            name="body"
-            placeholder="Articles's Body"
-            onChange={(e) => {
-              setBody(e.target.value);
-              handleErrors(e);
-            }}
-            className="my-2 p-2 rounded-md outline-none border-2 border-gray-300 focus:border-blue-500"
-          ></textarea>
           <input
             type="text"
             value={tags}
@@ -127,6 +119,14 @@ function UpdateArticle() {
             }}
             className="my-2 p-2 rounded-md outline-none border-2 border-gray-300 focus:border-blue-500"
           />
+          <MDEditor
+            className="my-2 p-2 rounded-md outline-none border-2 border-gray-300 focus:border-blue-500"
+            name="body"
+            value={body}
+            height="180"
+            onChange={setBody}
+          />
+
           <input
             type="submit"
             value="Update Article"

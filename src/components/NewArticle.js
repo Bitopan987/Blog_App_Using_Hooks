@@ -3,8 +3,7 @@ import { useNavigate } from 'react-router';
 import articlesApi from '../apis/articles';
 import { validations } from '../utils/validations';
 
-// import MarkdownIt from 'markdown-it';
-// import MarkdownEditor from 'react-markdown-editor-lite';
+import MDEditor from '@uiw/react-md-editor';
 
 function NewArticle() {
   const [title, setTitle] = useState('');
@@ -32,7 +31,7 @@ function NewArticle() {
     if (title && description && tagList.length && body) {
       try {
         const payload = {
-          article: { title, description, tags, body },
+          article: { title, description, tagList, body },
         };
         const { data } = await articlesApi.create(payload);
         console.log(data);
@@ -82,24 +81,15 @@ function NewArticle() {
             handleErrors(e);
           }}
         ></input>
-        {/* <MdEditor
-          style={{ height: '500px' }}
-          renderHTML={(text) => mdParser.render(text)}
-          onChange={handleEditorChange}
-          onSubmit={clearEditor}
-        /> */}
-        <textarea
+        <MDEditor
           className="block w-full my-3 py-2 px-3 border border-gray-400 rounded-md"
           name="body"
           placeholder="Write Your Story"
           value={body}
-          cols="40"
-          rows="5"
-          onChange={(e) => {
-            setBody(e.target.value);
-            handleErrors(e);
-          }}
-        ></textarea>
+          height="180"
+          onChange={setBody}
+        />
+        {/* <MDEditor.Markdown source={body} /> */}
         <input
           type="submit"
           value="Publish Article"
