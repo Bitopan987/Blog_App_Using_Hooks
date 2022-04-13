@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useContext } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import authApi from '../apis/auth';
 import LOCAL_STORAGE_KEY from '../utils/constants';
+import authInitializer from '../apis/axios';
 import { validations } from '../utils/validations';
+import UserContext from '../context/UserContext';
 
 function Signup() {
   const initialData = {
@@ -10,8 +12,11 @@ function Signup() {
     email: '',
     password: '',
   };
+
   const [user, setUser] = useState(initialData);
   const [errors, setErrors] = useState(initialData);
+  const navigate = useNavigate();
+  const info = useContext(UserContext);
 
   function handleChange({ target }) {
     let { name, value } = target;
@@ -27,21 +32,26 @@ function Signup() {
       try {
         const payload = { user: { username, password, email } };
         const { data } = await authApi.signup(payload);
-        setUser({ password: '', email: '', username: '' });
+        info.setUser(data.user);
+        info.setIsLoggedIn(true);
         localStorage.setItem(LOCAL_STORAGE_KEY, data.user.token);
-        window.location.href = '/articles';
+        authInitializer();
+        navigate(`/articles`);
       } catch (error) {
-        console.log(error);
+        setErrors((errors) => ({
+          ...errors,
+          ...error.response.data.errors,
+        }));
       }
     }
   };
 
   let { username, password, email } = errors;
   return (
-    <main className="bg-gray-300 py-10">
+    <main className=" py-10">
       <section className="py-20">
         <form
-          className="w-1/3 mx-auto border border-gray-400 p-6 rounded-md shadow-md"
+          className="w-1/3 mx-auto border  bg-gray-100 border-gray-400 p-6 rounded-md shadow-md"
           onSubmit={handleSubmit}
         >
           <div className="text-center">
@@ -62,7 +72,6 @@ function Signup() {
               onChange={(e) => handleChange(e)}
             />
             <span className="text-red-500">{username}</span>
-
             <input
               className="block w-full my-3 py-2 px-3 border border-gray-400 rounded-md"
               type="text"
@@ -86,7 +95,7 @@ function Signup() {
             <input
               type="submit"
               value="Sign Up"
-              className="block  w-full btn bg-gray-500 text-white font-bold cursor-pointer"
+              className="rounded block mt-6 py-2 w-full btn-gray  font-bold cursor-pointer"
               disabled={username || email || password}
             />
           </fieldset>

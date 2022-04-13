@@ -3,6 +3,7 @@ import { validations } from '../utils/validations';
 import Loader from './Loader';
 import UserContext from '../context/UserContext';
 import profileApi from '../apis/profile';
+import { useNavigate } from 'react-router';
 
 function Settings() {
   const [image, setImage] = useState('');
@@ -12,9 +13,9 @@ function Settings() {
   const [errors, setErrors] = useState({ username: '', password: '' });
 
   const info = useContext(UserContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    console.log(info);
     let { image, username, bio } = info.user;
     setImage(image);
     setUserName(username);
@@ -34,7 +35,7 @@ function Settings() {
       try {
         const payload = { user: { username, password, bio, image } };
         const { data } = await profileApi.update(payload);
-        window.location.href = `/profiles/${data.user.username}`;
+        navigate(`/profiles/${data.user.username}`);
       } catch (error) {
         setErrors(error);
       }

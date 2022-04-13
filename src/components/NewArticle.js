@@ -84,7 +84,6 @@ function NewArticle() {
         <MDEditor
           className="block w-full my-3 py-2 px-3 border border-gray-400 rounded-md"
           name="body"
-          placeholder="Write Your Story"
           value={body}
           height="180"
           onChange={setBody}

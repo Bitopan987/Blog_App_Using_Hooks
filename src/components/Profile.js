@@ -56,7 +56,6 @@ function Profile(props) {
   const handleClick = ({ target }) => {
     let { id } = target.dataset;
     setActivePageIndex(id);
-    //...state
   };
 
   const updateCurrentPageIndex = (index) => {
@@ -66,7 +65,7 @@ function Profile(props) {
   const handleFollow = async () => {
     let { username } = user;
     try {
-      const finalApi = following ? profileApi.follow : profileApi.unfollow;
+      const finalApi = following ? profileApi.unfollow : profileApi.follow;
       const { profile } = await finalApi(username);
       setFollowing(profile.following);
     } catch (error) {
@@ -75,7 +74,7 @@ function Profile(props) {
   };
 
   const handleFavorite = async ({ target }) => {
-    let { id, slug, count } = target.dataset;
+    let { id, slug } = target.dataset;
     const finalApi =
       id === 'false' ? profileApi.addFavourite : profileApi.removeFavourite;
     try {
@@ -99,7 +98,7 @@ function Profile(props) {
   return (
     <main>
       <section className="pt-16">
-        <div className="bg-indigo-100 text-white py-16 mt-0 text-center">
+        <div className="bg-gray-100 text-white py-16 mt-0 text-center">
           <img
             src={image || '/image/smiley.jpg'}
             alt={username}
@@ -116,8 +115,8 @@ function Profile(props) {
                 <i
                   className={
                     !following
-                      ? 'ri-add-circle-fill  mr-2'
-                      : 'ri-subtract-line mr-2'
+                      ? 'ri-user-follow-fill  mr-2'
+                      : 'ri-user-unfollow-fill mr-2'
                   }
                 ></i>
                 {!following ? 'follow' : 'unfollow'}

@@ -25,7 +25,6 @@ function Comments(props) {
       )}
       {comments.length > 0 ? (
         comments.map((comment) => {
-          console.log(comment);
           return (
             <div
               key={comment.createdAt}

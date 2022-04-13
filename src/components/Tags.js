@@ -8,7 +8,6 @@ function Tags(props) {
   const getTags = async () => {
     try {
       const { data } = await tagsApi.tags();
-      console.log(data);
       setAllTags(data.tags);
     } catch (error) {
       setError('Not able to fetch Tags');

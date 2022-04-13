@@ -49,7 +49,6 @@ function UpdateArticle() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log(event, tags);
     const tagList = tags.split(',').map((tag) => tag.trim());
     if (title && description && tagList && body) {
       try {
@@ -57,7 +56,6 @@ function UpdateArticle() {
           article: { title, description, tagList, body },
         };
         const { data } = await articlesApi.update(slug, payload);
-        console.log(data);
         setArticle(data.article);
         navigate(`/articles/${slug}`);
       } catch (errors) {

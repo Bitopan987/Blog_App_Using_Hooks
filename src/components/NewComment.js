@@ -55,7 +55,7 @@ function NewComment(props) {
     }
   };
 
-  let loggedInUser = info.user.username;
+  let loggedInUser = info?.user?.username;
 
   return (
     <>
