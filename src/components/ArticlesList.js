@@ -17,22 +17,21 @@ function ArticlesList() {
   const userData = useContext(UserContext);
   const { isLoggedIn } = userData;
 
-  const getArticles = async () => {
-    const query =
-      `?offset=${(activePageIndex - 1) * 10}&limit=${articlesPerPage}` +
-      (tagSelected && `&tag=${tagSelected}`);
-    try {
-      const finalApi =
-        selectedFeed === 'global' ? articlesApi.articles : articlesApi.feed;
-      const { data } = await finalApi(query);
-      setArticles(data.articles);
-      setArticlesCount(data.articlesCount);
-    } catch (error) {
-      setError('Not able to fetch Articles');
-    }
-  };
-
   useEffect(() => {
+    const getArticles = async () => {
+      const query =
+        `?offset=${(activePageIndex - 1) * 10}&limit=${articlesPerPage}` +
+        (tagSelected && `&tag=${tagSelected}`);
+      try {
+        const finalApi =
+          selectedFeed === 'global' ? articlesApi.articles : articlesApi.feed;
+        const { data } = await finalApi(query);
+        setArticles(data.articles);
+        setArticlesCount(data.articlesCount);
+      } catch (error) {
+        setError('Not able to fetch Articles');
+      }
+    };
     getArticles();
   }, [activePageIndex, articlesPerPage, tagSelected, selectedFeed]);
 

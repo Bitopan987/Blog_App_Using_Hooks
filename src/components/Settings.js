@@ -20,7 +20,7 @@ function Settings() {
     setImage(image);
     setUserName(username);
     setBio(bio);
-  }, [info.data]);
+  }, [info.user]);
 
   const handleErrors = ({ target }) => {
     let { name, value } = target;

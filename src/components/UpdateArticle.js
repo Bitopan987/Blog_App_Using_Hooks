@@ -24,19 +24,19 @@ function UpdateArticle() {
   const navigate = useNavigate();
   const { slug } = useParams();
 
-  const getArticle = async () => {
-    try {
-      const { data } = await articlesApi.article(slug);
-      setArticle(data.article);
-      setTitle(data.article.title);
-      setDescription(data.article.description);
-      setBody(data.article.body);
-      setTags(data.article.tagList.join(','));
-    } catch (error) {
-      console.log(error);
-    }
-  };
   useEffect(() => {
+    const getArticle = async () => {
+      try {
+        const { data } = await articlesApi.article(slug);
+        setArticle(data.article);
+        setTitle(data.article.title);
+        setDescription(data.article.description);
+        setBody(data.article.body);
+        setTags(data.article.tagList.join(','));
+      } catch (error) {
+        console.log(error);
+      }
+    };
     getArticle();
   }, [slug]);
 

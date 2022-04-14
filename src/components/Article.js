@@ -15,15 +15,15 @@ function Article() {
   const { isLoggedIn, user } = userData;
   const navigate = useNavigate();
 
-  const getArticle = async () => {
-    try {
-      const { data } = await articlesApi.article(slug);
-      setArticle(data.article);
-    } catch (error) {
-      setError('Not able to fetch Articles');
-    }
-  };
   useEffect(() => {
+    const getArticle = async () => {
+      try {
+        const { data } = await articlesApi.article(slug);
+        setArticle(data.article);
+      } catch (error) {
+        setError('Not able to fetch Articles');
+      }
+    };
     getArticle();
   }, [slug]);
 
