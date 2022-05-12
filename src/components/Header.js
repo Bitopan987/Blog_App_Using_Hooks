@@ -53,7 +53,7 @@ function AuthHeader(props) {
           `btn mr-5 mt:5 md:mt-0 ${isActive ? 'btn-active' : undefined}`
         }
       >
-        Home
+        Articles
       </NavLink>
       <NavLink
         to="/new-article"
@@ -78,7 +78,7 @@ function NonAuthHeader(props) {
           `btn ${isActive ? 'btn-active' : undefined}`
         }
       >
-        Home
+        Articles
       </NavLink>
       <NavLink
         to="/register"
